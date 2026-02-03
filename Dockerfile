@@ -4,10 +4,8 @@ WORKDIR /app
 
 RUN npm install -g openclaw
 
-# Create OpenClaw config directory
 RUN mkdir -p /root/.openclaw
 
 EXPOSE 18789
 
-# Start gateway and keep container alive
-CMD ["sh", "-c", "openclaw gateway || tail -f /dev/null"]
+CMD ["sh", "-c", "OPENCLAW_HOST=0.0.0.0 OPENCLAW_PORT=18789 openclaw gateway"]
