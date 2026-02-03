@@ -1,12 +1,24 @@
-FROM node:20-slim
+FROM node:20
 
 WORKDIR /app
 
-# Create OpenClaw config directory
+# Install system deps
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Clone OpenClaw source
+RUN git clone https://github.com/openclaw/openclaw.git .
+
+# Install dependencies
+RUN npm install
+
+# Build OpenClaw
+RUN npm run build
+
+# Create data directory
 RUN mkdir -p /root/.openclaw
 
-# Expose OpenClaw port
+# Expose gateway port
 EXPOSE 18789
 
-# Run OpenClaw via npx (THIS IS THE KEY)
-CMD ["npx", "openclaw", "gateway"]
+# Run OpenClaw directly from source
+CMD ["node", "dist/index.js"]
