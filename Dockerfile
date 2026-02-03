@@ -1,24 +1,27 @@
-FROM node:20
+FROM node:22.12.0
 
 WORKDIR /app
 
-# Install system deps
+# Install system dependencies
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Install pnpm (REQUIRED by OpenClaw)
+RUN npm install -g pnpm
 
 # Clone OpenClaw source
 RUN git clone https://github.com/openclaw/openclaw.git .
 
-# Install dependencies
-RUN npm install
+# Install dependencies using pnpm
+RUN pnpm install
 
 # Build OpenClaw
-RUN npm run build
+RUN pnpm run build
 
-# Create data directory
+# Create OpenClaw data directory
 RUN mkdir -p /root/.openclaw
 
 # Expose gateway port
 EXPOSE 18789
 
-# Run OpenClaw directly from source
+# Start OpenClaw
 CMD ["node", "dist/index.js"]
