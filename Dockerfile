@@ -2,14 +2,11 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Install OpenClaw
-RUN npm install -g openclaw
-
-# Ensure config directory exists
+# Create OpenClaw config directory
 RUN mkdir -p /root/.openclaw
 
-# Explicitly expose port
+# Expose OpenClaw port
 EXPOSE 18789
 
-# Run OpenClaw using absolute path
-CMD ["/usr/local/bin/openclaw", "gateway"]
+# Run OpenClaw via npx (THIS IS THE KEY)
+CMD ["npx", "openclaw", "gateway"]
